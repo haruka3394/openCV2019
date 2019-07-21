@@ -77,8 +77,9 @@ plt.show()
     - openCV version 3.4.2
 
 - 参考文献
-    -
-    -
-    -
-    -
-    -
+    - [ゼロからはじめるPython(35) OpenCVで監視カメラを自作してみよう | マイナビニュース](https://news.mynavi.jp/article/zeropython-35/)
+        - openCVを用いてカメラ画像を取得するプログラムのソースコードの参考にするために，利用した．
+    - [GitHubアカウント作成とリポジトリの作成手順 - Qiita](https://qiita.com/kooohei/items/361da3c9dbb6e0c7946b)
+        - GitHubアカウントの作成とリポジトリの作成時に参考にした．
+    - [今更ながらPythonでOpenCVを使うための覚書 - Qiita](https://qiita.com/jeankenshow/items/01948b2103dff3fc9e5f)
+        - 自分のノートPCにOpenCVをインストールする際に，参考にした．
