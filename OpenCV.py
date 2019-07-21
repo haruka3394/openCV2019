@@ -17,7 +17,7 @@ while True:
     cv2.imshow('PUSH ENTER KEY', img)
     if cv2.waitKey(1) == 13: break
 
-        cam.release()
+cam.release()
 cv2.destroyAllWindows()
 
 ave_y = sum(y[20: i-20]) / len(y[20:i-20])

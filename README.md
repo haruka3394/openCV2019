@@ -31,7 +31,7 @@ while True:
     cv2.imshow('PUSH ENTER KEY', img)
     if cv2.waitKey(1) == 13: break
 
-        cam.release()
+cam.release()
 cv2.destroyAllWindows()
 
 ave_y = sum(y[20: i-20]) / len(y[20:i-20])
@@ -46,9 +46,20 @@ plt.savefig('Finger.pdf')
 plt.show()
 
 ```
-- インポートしたライブラリは，numpy，cv2，matplotlibの３種類
-    - numpy ：array型の変数を使用するため．
-    - cv2：openCVを使用するため．
-    - matplotlib.pyplot：グラフを表示させるため．
+- コードの説明
+    - インポートしたライブラリは，numpy，cv2，matplotlibの３種類
+        - numpy ：array型の変数を使用するため．
+        - cv2：openCVを使用するため．
+        - matplotlib.pyplot：グラフを表示させるため．
 
--
+    - `cam = cv2.VideoCapture(0)`：カメラのキャプチャ開始を表す．引数の０はカメラの番号を表す．
+
+    - `cam.read()`：このメソッドにより，カメラから実際に画像を取得する．
+
+    - `cv2.imshow('PUSH ENTER KEY', img)`：画像を出力ウィンドウに表示させるメソッド．
+
+    - `cam.release(), cv2.destroyAllWindows()`：キャプチャを終了して，ウィンドウを閉じるためのメソッド．
+
+    - Enterキーが押されると，カメラ画像からの映像の取得が終了する仕組みとなっている．
+
+    - また，毎フレームの輝度値の平均値を格納する1次元配列y[]を500個宣言し，imgの値が更新されるたびに，mean()メソッドにより計算された輝度値の平均値を順に保存している．
