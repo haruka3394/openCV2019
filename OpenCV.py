@@ -8,7 +8,6 @@ import matplotlib.pyplot as plt
 y = [0] * 500
 i = 0
 
-import cv2
 cam = cv2.VideoCapture(0)
 while True:
     _, img = cam.read()
