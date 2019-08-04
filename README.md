@@ -1,84 +1,97 @@
+# ディジタル信号処理と画像処理　OpenCvを用いた画像処理
 
+B173394 
 
-# ディジタル信号処理と画像処理　レポート課題
+- OpenCVを用いてカメラ画像を取得し, 毎フレームの輝度の平均値を出力する. またその値をグラフにプロットする. 
 
-
-
-- OpenCVを用いて，カメラ画像を取得し，毎フレームの輝度の平均値を出力，グラフにプロットするプログラムを作成する．
-
-以下のソースコードのように実装した．
+以下にソースコードを示す. まずAnacondaをインストールし, JupyterにてOpenCVをインストールした. 
 
 ``` Python
+!pip install opencv-python
+```
 
-%matplotlib nbagg
-
-import numpy as np
+``` Python
 import cv2
+import numpy as np
 import matplotlib.pyplot as plt
 
+y=[]
+
+capture = cv2.VideoCapture(0)
+
+while(True):
+    ret, frame = capture.read()
+    gray = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
+    avr = np.average(gray)
+    print(avr)
+    y.append(avr)
+    cv2.imshow('frame',gray)
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
 
 
-y = [0] * 500
-i = 0
-
-cam = cv2.VideoCapture(0)
-while True:
-    _, img = cam.read()
-    y[i] = img.mean()
-    i += 1
-
-    cv2.imshow('PUSH ENTER KEY', img)
-    if cv2.waitKey(1) == 13: break
-
-cam.release()
+print(len(y))
+x=np.linspace(1,100,len(y))
+capture.release()
 cv2.destroyAllWindows()
-
-ave_y = sum(y[20: i-20]) / len(y[20:i-20])
-x = np.linspace(0, 500, 500)
-plt.plot(x, y)
-plt.xlabel("times")
-plt.ylabel("mean of image")
-plt.xlim([10, i-10])
-plt.ylim([ave_y-5, ave_y +5])
-plt.title("Finger blood flow")
-plt.savefig('Finger.pdf')
+plt.plot(x, y, label="test")
 plt.show()
-
 ```
 - コードの説明
-    - インポートしたライブラリは，numpy，cv2，matplotlibの３種類
-        - numpy ：array型の変数を使用するため．
-        - cv2：openCVを使用するため．
-        - matplotlib.pyplot：グラフを表示させるため．
+  - cv2 (openCVを使用する), numpy as np (array型の変数を使用する),  matplotlib.pyplot as plt (グラフを表示させる)ライブラリをインポートする. 
+  
+  - `y = []` : 配列を得ている
+  - `capture = cv2.VideoCapture(0)` : カメラのキャプチャを開始させる. 
+  ``` Phython
+    while(True):
+    ret, frame = capture.read()
+    gray = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
+    avr = np.average(gray)
+    print(avr)
+    y.append(avr)
+    cv2.imshow('frame',gray)
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+    ```
+  - このwhile文でキーボードからqを入力されるまで画像を取得して基礎値の平均を取っている. これは毎フレームごとに行われる. 
+    - `capture.read()` : カメラから画像を取得する. それをframeに入れている. 
+    - `gray = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)` : 画像をグレースケールに変換している. 
+    - `avr = np.average(gray)` : グレースケールに変換した画像の輝度値の平均値を取っている.  
+    - `print(avr)` : 輝度値の平均値を表示させている. 
+    - `y.append(avr)` : yに輝度値の平均値の値を入れて行っている. 
+    - `cv2.imshow('frame',gray)` : カメラの画像をウィンドウに出力している. 
+    
+  - `print(len(y))` : 輝度値の平均値がいくつあるかを表示させている. 
+  - `x=np.linspace(1,100,len(y))` : xを定義している. 1から100までを輝度値の平均値の個数で割っている. 
+  - `capture.release(), cv2.destroyAllWindows()` : カメラから得ているキャプチャを終了し, ウィンドウを閉じる. 
+  - `plt.plot(x, y, label="test"), plt.show()` : w,yの値を表示させている. 
+  
+  
+- 実行結果  
+今回の課題は, カメラに指を押し当て脈拍を図るというものだった. これは指に光をあてることで指を透過し, 光の微量な変化を読み込み, 輝度値の平均としてグラフに表示している. 以下にグラフを表示する. 
 
-    - `cam = cv2.VideoCapture(0)`：カメラのキャプチャ開始を表す．引数の０はカメラの番号を表す．
+![](opencv-2.pdf)
 
-    - `cam.read()`：このメソッドにより，カメラから実際に画像を取得する．
+これにより脈拍をグラフの一定の変化により確認することができる. また, 輝度値の値をkidoti.txtに示し, ウィンドウの画像の変化をGIFに示す. GIFファイルからも光の微量な変化を見ることができる. 
 
-    - `cv2.imshow('PUSH ENTER KEY', img)`：画像を出力ウィンドウに表示させるメソッド．
+![](openCV.gif)
 
-    - `cam.release(), cv2.destroyAllWindows()`：キャプチャを終了して，ウィンドウを閉じるためのメソッド．
-
-    - Enterキーが押されると，カメラ画像からの映像の取得が終了する仕組みとなっている．
-
-    - また，毎フレームの輝度値の平均値を格納する1次元配列y[]を500個宣言し，imgの値が更新されるたびに，mean()メソッドにより計算された輝度値の平均値を順に保存している．
-
-    - グラフのプロットでは，横軸に計測したフレームの回数をとり，縦軸に輝度値の平均値をとった．
-
-- 今回は，カメラに指を押し当てて，指を透過してレンズに届く光の僅かな変化をグラフにプロットした．そのグラフを以下に示す．
-    - 脈拍に応じて，レンズまで届く光量に微妙な差が見られることが確認できる．
-
-![](Finger.png)
-
-- 実行環境を以下に示す通りである．
-    - macOS Mojave version 10.14.3
-    - Python 3.7.3
-    - openCV version 3.4.2
+- バージョン
+    - macOS Mojave 10.14.5
+    - Pyhton 3.7
 
 - 参考文献
-    - [ゼロからはじめるPython(35) OpenCVで監視カメラを自作してみよう | マイナビニュース](https://news.mynavi.jp/article/zeropython-35/)
-        - openCVを用いてカメラ画像を取得するプログラムのソースコードの参考にするために，利用した．
-    - [GitHubアカウント作成とリポジトリの作成手順 - Qiita](https://qiita.com/kooohei/items/361da3c9dbb6e0c7946b)
-        - GitHubアカウントの作成とリポジトリの作成時に参考にした．
-    - [今更ながらPythonでOpenCVを使うための覚書 - Qiita](https://qiita.com/jeankenshow/items/01948b2103dff3fc9e5f)
-        - 自分のノートPCにOpenCVをインストールする際に，参考にした．
+  - [matplotlibでのプロットの基本](https://qiita.com/KntKnk0328/items/5ef40d9e77308dd0d0a40)  
+  matplotでグラフをプロットする方法
+  
+  - [Pythonでリストサイズを取得](https://note.nkmk.me/python-list-len/)  
+  リストサイズの取得
+  
+  - [配列の要素の平均を求めるNumPyのaverage関数とmean関数の使い方](https://deepage.net/features/numpy-average.html)  
+  配列(画像)の要素の平均を求める
+  
+  - [OpenCV 接続したカメラから動画を取得しよう (Python)](https://weblabo.oscasierra.net/python/opencv-videocapture-camera.html)  
+  ビデオからの画像取得
+  
+  - [PythonとOpenCVで画像をグレースケールに変換してみた](https://water2litter.net/gin/?p=1757)  
+  画像をグレースケールに変換 
